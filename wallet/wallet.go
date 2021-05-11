@@ -11,10 +11,11 @@ import (
 	logging "github.com/ipfs/go-log/v2"
 	"golang.org/x/xerrors"
 
+	_ "epik/bls" // enable bls signatures
+
 	"github.com/EpiK-Protocol/go-epik/api"
 	"github.com/EpiK-Protocol/go-epik/chain/types"
 	"github.com/EpiK-Protocol/go-epik/lib/sigs"
-	_ "github.com/EpiK-Protocol/go-epik/lib/sigs/bls"  // enable bls signatures
 	_ "github.com/EpiK-Protocol/go-epik/lib/sigs/secp" // enable secp signatures
 )
 
