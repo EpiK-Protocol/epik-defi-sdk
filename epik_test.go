@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	endPoint       string = "ws://116.63.167.70:1234/rpc/v0"
-	token          string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBbGxvdyI6WyJyZWFkIiwid3JpdGUiLCJzaWduIiwiYWRtaW4iXX0.Spdcp3ssmva1jFKxUQm2ORjG5oskg2OnHHqbqQu4E9w"
+	endPoint       string = "ws://122.9.153.165:30536/rpc/v0"
+	token          string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBbGxvdyI6WyJyZWFkIiwid3JpdGUiLCJzaWduIiwiYWRtaW4iXX0.wDA2ZJlAVH7EJFubQXAEw-qI4-TNsj8DrMFwva0qkhw"
 	testPrivateKey string = "7b2254797065223a22626c73222c22507269766174654b6579223a22486e322f42703432456167647052323538416348793665484b2b494d4e6c42782b2f466f676261323941303d227d"
 )
 
@@ -105,10 +105,11 @@ func TestRetrievePledgeAdd(t *testing.T) {
 		panic(err)
 	}
 	defer closer()
-	daemon, err := address.NewFromString("f031817")
+	target, err := address.NewFromString("f031817")
 	if err != nil {
 		panic(err)
 	}
+	miners := []address.Address{}
 	w, err := NewEpikWallet()
 	if err != nil {
 		panic(err)
@@ -117,7 +118,7 @@ func TestRetrievePledgeAdd(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	c, err := w.RetrievePledgeAdd(node, daemon, owner, decimal.NewFromInt(1000))
+	c, err := w.RetrievePledgeAdd(node, target, miners, owner, decimal.NewFromInt(1000))
 	if err != nil {
 		panic(err)
 	}

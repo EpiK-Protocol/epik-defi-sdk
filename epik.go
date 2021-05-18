@@ -137,13 +137,16 @@ func (w *Wallet) MiningPledgeWithdraw(node api.FullNode, minerID address.Address
 	return w.sendMessage(node, msg)
 }
 
-func (w *Wallet) RetrievePledgeAdd(node api.FullNode, target address.Address, owner address.Address, amount decimal.Decimal) (cID cid.Cid, err error) {
+func (w *Wallet) RetrievePledgeAdd(node api.FullNode, target address.Address, miners []address.Address, owner address.Address, amount decimal.Decimal) (cID cid.Cid, err error) {
 
 	epk, err := types.ParseEPK(fmt.Sprintf("%sEPK", amount.String()))
 	if err != nil {
 		return
 	}
-	params, err := actors.SerializeParams(&target)
+	params, err := actors.SerializeParams(&retrieval.PledgeParams{
+		Address: target,
+		Miners:  miners,
+	})
 	if err != nil {
 		return cid.Undef, fmt.Errorf("serializing params failed: %w", err)
 	}
@@ -159,7 +162,44 @@ func (w *Wallet) RetrievePledgeAdd(node api.FullNode, target address.Address, ow
 		To:     retrieval.Address,
 		From:   owner,
 		Value:  abi.TokenAmount(epk),
-		Method: retrieval.Methods.AddBalance,
+		Method: retrieval.Methods.Pledge,
+		Params: params,
+	}
+	return w.sendMessage(node, msg)
+}
+
+func (w *Wallet) RetrievePledgeBind(node api.FullNode, miners []address.Address, owner address.Address) (cID cid.Cid, err error) {
+	params, err := actors.SerializeParams(&retrieval.BindMinersParams{
+		Pledger: owner,
+		Miners:  miners,
+	})
+	if err != nil {
+		return cid.Undef, fmt.Errorf("serializing params failed: %w", err)
+	}
+
+	msg := &types.Message{
+		To:     retrieval.Address,
+		From:   owner,
+		Value:  abi.NewTokenAmount(0),
+		Method: retrieval.Methods.BindMiners,
+		Params: params,
+	}
+	return w.sendMessage(node, msg)
+}
+
+func (w *Wallet) RetrievePledgeUnBind(node api.FullNode, miners []address.Address, owner address.Address) (cID cid.Cid, err error) {
+	params, err := actors.SerializeParams(&retrieval.BindMinersParams{
+		Pledger: owner,
+		Miners:  miners,
+	})
+	if err != nil {
+		return cid.Undef, fmt.Errorf("serializing params failed: %w", err)
+	}
+	msg := &types.Message{
+		To:     retrieval.Address,
+		From:   owner,
+		Value:  abi.NewTokenAmount(0),
+		Method: retrieval.Methods.UnbindMiners,
 		Params: params,
 	}
 	return w.sendMessage(node, msg)
@@ -322,16 +362,23 @@ func GetMinerInfo(node api.FullNode, miner address.Address) (info MinerInfo, err
 	if err != nil {
 		return
 	}
-	balance, err := node.StateMinerAvailableBalance(ctx, info.Owner, types.EmptyTSK)
+	info = MinerInfo{
+		MinerInfo:      i,
+		MinerPower:     *power,
+		Funds:          funds,
+		RetrievalState: *retrieve,
+	}
+	return
+}
+
+func GetCoinbaseInfo(node api.FullNode, coinbase address.Address) (coinbaseInfo CoinbaseInfo, err error) {
+	ctx := context.Background()
+	info, err := node.StateCoinbase(ctx, coinbase, types.EmptyTSK)
 	if err != nil {
 		return
 	}
-	info = MinerInfo{
-		MinerInfo:        i,
-		MinerPower:       *power,
-		Funds:            funds,
-		AvailableBalance: balance,
-		RetrievalState:   *retrieve,
+	coinbaseInfo = CoinbaseInfo{
+		CoinbaseInfo: *info,
 	}
 	return
 }

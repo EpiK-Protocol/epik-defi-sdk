@@ -5,6 +5,7 @@ import (
 
 	"github.com/EpiK-Protocol/go-epik/api"
 	"github.com/EpiK-Protocol/go-epik/chain/actors/builtin/miner"
+	"github.com/EpiK-Protocol/go-epik/chain/actors/builtin/vesting"
 	"github.com/EpiK-Protocol/go-epik/chain/actors/builtin/vote"
 	"github.com/filecoin-project/go-state-types/big"
 )
@@ -27,4 +28,8 @@ type VoterInfo struct {
 
 type ExpertInfo struct {
 	api.ExpertInfo
+}
+
+type CoinbaseInfo struct {
+	vesting.CoinbaseInfo
 }
