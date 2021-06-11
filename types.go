@@ -1,7 +1,7 @@
 package epik
 
 import (
-	"epik/wallet"
+	"github.com/EpiK-Protocol/epik-defi-sdk/wallet"
 
 	"github.com/EpiK-Protocol/go-epik/api"
 	"github.com/EpiK-Protocol/go-epik/chain/actors/builtin/miner"

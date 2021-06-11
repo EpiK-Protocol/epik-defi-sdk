@@ -11,7 +11,7 @@ import (
 	logging "github.com/ipfs/go-log/v2"
 	"golang.org/x/xerrors"
 
-	_ "epik/bls" // enable bls signatures
+	_ "github.com/EpiK-Protocol/epik-defi-sdk/bls" // enable bls signatures
 
 	"github.com/EpiK-Protocol/go-epik/api"
 	"github.com/EpiK-Protocol/go-epik/chain/types"

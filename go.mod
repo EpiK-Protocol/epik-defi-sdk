@@ -1,4 +1,4 @@
-module epik
+module github.com/EpiK-Protocol/epik-defi-sdk
 
 go 1.16
 

@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/hex"
 	"encoding/json"
-	"epik/wallet"
 	"fmt"
 	"net/http"
 
-	"epik/client"
+	"github.com/EpiK-Protocol/epik-defi-sdk/wallet"
+
+	"github.com/EpiK-Protocol/epik-defi-sdk/client"
 
 	"github.com/EpiK-Protocol/go-epik/api"
 	"github.com/EpiK-Protocol/go-epik/chain/actors"
