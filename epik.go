@@ -69,6 +69,7 @@ func (w *Wallet) sendMessage(node api.FullNode, msg *types.Message) (cID cid.Cid
 	if err != nil {
 		return
 	}
+	msg.GasLimit = msg.GasLimit * 120 / 100
 	signature, err := w.WalletSign(context.Background(), msg.From, msg.Cid().Bytes(), api.MsgMeta{})
 	if err != nil {
 		return cid.Undef, err
